@@ -1,5 +1,7 @@
 # romi-soccer
 
-Test
+first line
+second line\n
+third line
 
-Test2 (from IDE)
+forth line
