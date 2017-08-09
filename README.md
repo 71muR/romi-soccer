@@ -1,5 +1,5 @@
 # romi-soccer
 
-Test
+Project SOCCER
 
-Test2 (from IDE)
+Java language
