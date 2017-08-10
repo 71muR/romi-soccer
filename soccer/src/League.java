@@ -37,6 +37,7 @@ public class League {
 
         String teamNames[] = {"Greens", "Reds", "Blues", "Yellows"};
 
+
         // error message variable;
 
         String errorMessage = "!!! Program error: The players cannot be divided in teams equally. Check it!";
@@ -49,12 +50,6 @@ public class League {
         int totalTeams = teamNames.length;
 
 
-        // instantiation of the arrays for players and teams;
-
-        Player[] players = new Player[totalPlayers];
-        Team teams[] = new Team[totalTeams];
-
-
         // printing out a message about the numbers of players, teams and the size of a team;
 
         System.out.println("Team size: " + teamSize);
@@ -62,128 +57,184 @@ public class League {
         System.out.println("Total teams: " + totalTeams + '\n');
         System.out.println();
 
+
         // short-circuit AND is used here to control
         // the number of players, teams and the team size
 
         if ((totalPlayers % teamSize == 0) && (totalPlayers / teamSize == totalTeams)) {
 
+            // creating Player and Team Objects;
+            Player[] players = createPlayers(totalPlayers, playerNames);
+            Team[] teams = createTeams(totalTeams, teamNames);
 
-            // instantiation of players in an array and assigning <playerName> properties;
-
-            for (int i = 0; i < totalPlayers; i++) {
-
-                players[i] = new Player();
-                players[i].playerName = playerNames[i];
-            }
+            // assigning players to teams;
+            assignPlayersToTeams(teamSize, players, teams);
 
 
-            // instantiation of teams in an array, and assigning <teamName> properties;
-
-            for (int i = 0; i < totalTeams; i++) {
-
-                teams[i] = new Team();
-                teams[i].teamName = teamNames[i];
-            }
-
-
-            // assigning players to teams and printing rosterOfPlayers;
-
-            for (int i = 0; i < totalTeams; i++) {
-
-                System.out.println();
-                System.out.println(teams[i].teamName + ": ");
-
-
-                // instantiating <rosterOfPlayers> property for each team;
-
-                teams[i].rosterOfPlayers = new Player[teamSize];
-
-
-                // assigning players to teams by writing their names to the rosterOfPlayers array;
-
-                for (int j = 0; j < teamSize; j++) {
-
-                    teams[i].rosterOfPlayers[j] = players[i * teamSize + j];
-                    System.out.println((j + 1) + ". " + teams[i].rosterOfPlayers[j].playerName);
-                }
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////
-
-            Random r = new Random();
-
+            // creating the Game;
             Game newGame = new Game();
 
-
-            // finding out home and away teams;
-
-            int indexOfHomeTeam, indexOfAwayTeam;
-
-            indexOfHomeTeam = indexOfAwayTeam = r.nextInt(totalTeams - 1);
-            newGame.homeTeam = teams[indexOfHomeTeam];
-
-            while (indexOfHomeTeam == indexOfAwayTeam) {
-                indexOfAwayTeam = r.nextInt(totalTeams - 1);
-                newGame.awayTeam = teams[indexOfAwayTeam];
-            }
-
-            System.out.println();
-            System.out.println(newGame.homeTeam.teamName + " vs " + newGame.awayTeam.teamName);
-            System.out.println();
+            // tossing up;
+            int[] twoTeamsToPlay = tossUp(teams);
+            newGame.homeTeam = teams[twoTeamsToPlay[0]];
+            newGame.awayTeam = teams[twoTeamsToPlay[1]];
 
             // finding out the number of goals during the game;
-
+            Random r = new Random();
             int numberOfGoals = r.nextInt(5);
+            System.out.println(numberOfGoals);
 
-            Goal scoredGoals[] = new Goal[numberOfGoals];
+            // writing to the game object, who scored and at what time;
 
-            int playerScored; // the index of player who scored
-
-            if (numberOfGoals == 0) {
-                System.out.println("Nobody scored in this game.");
-            }
-            // finding out the players who scored;
-
-            for (int i = 0; i < numberOfGoals; i++) {
-                scoredGoals[i] = new Goal();
-                playerScored = r.nextInt(teamSize * 2 - 1);
-                scoredGoals[i].scoredTime = Math.round(r.nextDouble() * 90);
-
-                if (playerScored < teamSize) {
-                    scoredGoals[i].scoredTeam = newGame.homeTeam;
-                    scoredGoals[i].scoredPlayer = teams[indexOfHomeTeam].rosterOfPlayers[playerScored];
-                } else {
-                    scoredGoals[i].scoredTeam = newGame.awayTeam;
-                    scoredGoals[i].scoredPlayer = teams[indexOfAwayTeam].rosterOfPlayers[playerScored - 6];
-                }
-                System.out.println(scoredGoals[i].scoredPlayer.playerName + " from " +
-                        scoredGoals[i].scoredTeam.teamName + " scored at " + scoredGoals[i].scoredTime + " minutes.");
+            if (numberOfGoals != 0) {
+                scoredGoals(teamSize, numberOfGoals, newGame);
             }
 
-            newGame.scoredGoals = scoredGoals;
 
+            // PRINTING ON SCREEN
 
-            // Printing out The Game Object Content;
+            printRoster(teamSize, teams);
+            printTheGame(newGame);
 
-            System.out.println();
-            System.out.println("Info from the Game object: ");
-            System.out.println();
-            System.out.println("Home Team: " + newGame.homeTeam.teamName);
-            System.out.println("Away Team: " + newGame.awayTeam.teamName);
-            System.out.println();
-            for (int i = 0; i < newGame.scoredGoals.length; i++) {
-                System.out.println("Goal " + (i+1));
-                System.out.println("Player scored: " + newGame.scoredGoals[i].scoredPlayer.playerName);
-                System.out.println("Team scored: " + newGame.scoredGoals[i].scoredTeam.teamName);
-                System.out.println("Time scored: " + newGame.scoredGoals[i].scoredTime);
-                System.out.println();
-
-
-            }
 
         } else {
             System.out.println(errorMessage);
         }
 
+    }
+
+    /*************************************************************************/
+   /*                            METHODS                                    */
+
+    /*************************************************************************/
+
+
+    // method to create Player Objects;
+    static Player[] createPlayers(int numOfPlayers, String[] listOfNames) {
+
+        Player[] players = new Player[numOfPlayers];
+
+        for (int i = 0; i < numOfPlayers; i++) {
+
+            players[i] = new Player();
+            players[i].playerName = listOfNames[i];
+        }
+
+        return players;
+    }
+
+
+    // method to create Team Objects;
+
+    static Team[] createTeams(int numOfTeams, String[] listOfNames) {
+        Team[] teams = new Team[numOfTeams];
+        for (int i = 0; i < numOfTeams; i++) {
+
+            teams[i] = new Team();
+            teams[i].teamName = listOfNames[i];
+        }
+        return teams;
+    }
+
+
+    // method to assign players to teams;
+
+    static void assignPlayersToTeams(int teamSize, Player[] players, Team[] teams) {
+
+        for (int i = 0; i < teams.length; i++) {
+            teams[i].rosterOfPlayers = new Player[teamSize];
+
+            for (int j = 0; j < teamSize; j++) {
+                teams[i].rosterOfPlayers[j] = players[i * teamSize + j];
+            }
+        }
+    }
+
+
+    // method for tossing-up of two teams, that will play the game;
+
+    static int[] tossUp(Team[] teams) {
+
+        int numberOfTeams = teams.length;
+        int[] indicesOfTeams = new int[2];
+        Random rand = new Random();
+
+        indicesOfTeams[0] = indicesOfTeams[1] = rand.nextInt(numberOfTeams - 1);
+
+        while (indicesOfTeams[0] == indicesOfTeams[1]) {
+            indicesOfTeams[1] = rand.nextInt(numberOfTeams - 1);
+        }
+        return indicesOfTeams;
+
+    }
+
+
+    // method to print the roster of players;
+
+    static void printRoster(int teamSize, Team[] teams) {
+
+        System.out.println();
+
+        for (int i = 0; i < teams.length; i++) {
+            System.out.println(teams[i].teamName + ": ");
+
+            for (int j = 0; j < teamSize; j++) {
+                System.out.println((j + 1) + ". " + teams[i].rosterOfPlayers[j].playerName);
+
+            }
+            System.out.println();
+        }
+    }
+
+
+    // the players who scored, the times of goals ...
+
+    static void scoredGoals(int teamSize, int numberOfGoals, Game newGame) {
+
+        newGame.scoredGoals = new Goal[numberOfGoals];
+        int playerScored;
+        Random rand = new Random();
+
+        for (int i = 0; i < numberOfGoals; i++) {
+
+            Goal goal = new Goal();
+
+            playerScored = rand.nextInt(teamSize * 2 - 1);
+            goal.scoredTime = Math.round(rand.nextDouble() * 90);
+
+            if (playerScored < teamSize) {
+                goal.scoredTeam = newGame.homeTeam;
+                goal.scoredPlayer = newGame.homeTeam.rosterOfPlayers[playerScored];
+            } else {
+                goal.scoredTeam = newGame.awayTeam;
+                goal.scoredPlayer = newGame.awayTeam.rosterOfPlayers[playerScored - 6];
+            }
+            newGame.scoredGoals[i] = goal;
+        }
+    }
+
+    // Printing out The Game Object Content;
+
+    static void printTheGame(Game game) {
+
+        System.out.println();
+
+        System.out.println("Home Team: " + game.homeTeam.teamName);
+        System.out.println("Away Team: " + game.awayTeam.teamName);
+
+        if (game.scoredGoals.length == 0) {
+            System.out.println("Draw game");
+        }
+        System.out.println();
+
+        for (int i = 0; i < game.scoredGoals.length; i++) {
+            System.out.println("Goal " + (i + 1));
+            System.out.println("Player scored: " + game.scoredGoals[i].scoredPlayer.playerName);
+            System.out.println("Team scored: " + game.scoredGoals[i].scoredTeam.teamName);
+            System.out.println("Time scored: " + game.scoredGoals[i].scoredTime);
+            System.out.println();
+
+
+        }
     }
 }
