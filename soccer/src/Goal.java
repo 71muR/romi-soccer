@@ -2,8 +2,8 @@
 
 public class Goal {
 
-    String scoredTeam;
-    String scoredPlayer;
+    Team scoredTeam;
+    Player scoredPlayer;
     double scoredTime;
 
 }

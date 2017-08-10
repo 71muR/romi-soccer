@@ -51,11 +51,9 @@ public class League {
 
         // instantiation of the arrays for players and teams;
 
-        Player players[] = new Player[totalPlayers];
+        Player[] players = new Player[totalPlayers];
         Team teams[] = new Team[totalTeams];
 
-        // METHODS
-        // instantiation of players in an array and assigning <playerName> properties;
 
         // printing out a message about the numbers of players, teams and the size of a team;
 
@@ -98,15 +96,15 @@ public class League {
 
                 // instantiating <rosterOfPlayers> property for each team;
 
-                teams[i].rosterOfPlayers = new String[teamSize];
+                teams[i].rosterOfPlayers = new Player[teamSize];
 
 
                 // assigning players to teams by writing their names to the rosterOfPlayers array;
 
                 for (int j = 0; j < teamSize; j++) {
 
-                    teams[i].rosterOfPlayers[j] = players[i * teamSize + j].playerName;
-                    System.out.println((j + 1) + ". " + teams[i].rosterOfPlayers[j]);
+                    teams[i].rosterOfPlayers[j] = players[i * teamSize + j];
+                    System.out.println((j + 1) + ". " + teams[i].rosterOfPlayers[j].playerName);
                 }
             }
 
@@ -122,15 +120,15 @@ public class League {
             int indexOfHomeTeam, indexOfAwayTeam;
 
             indexOfHomeTeam = indexOfAwayTeam = r.nextInt(totalTeams - 1);
-            newGame.homeTeam = teams[indexOfHomeTeam].teamName;
+            newGame.homeTeam = teams[indexOfHomeTeam];
 
             while (indexOfHomeTeam == indexOfAwayTeam) {
                 indexOfAwayTeam = r.nextInt(totalTeams - 1);
-                newGame.awayTeam = teams[indexOfAwayTeam].teamName;
+                newGame.awayTeam = teams[indexOfAwayTeam];
             }
 
             System.out.println();
-            System.out.println(newGame.homeTeam + " vs " + newGame.awayTeam);
+            System.out.println(newGame.homeTeam.teamName + " vs " + newGame.awayTeam.teamName);
             System.out.println();
 
             // finding out the number of goals during the game;
@@ -158,8 +156,8 @@ public class League {
                     scoredGoals[i].scoredTeam = newGame.awayTeam;
                     scoredGoals[i].scoredPlayer = teams[indexOfAwayTeam].rosterOfPlayers[playerScored - 6];
                 }
-                System.out.println(scoredGoals[i].scoredPlayer + " from " +
-                        scoredGoals[i].scoredTeam + " scored at " + scoredGoals[i].scoredTime + " minutes.");
+                System.out.println(scoredGoals[i].scoredPlayer.playerName + " from " +
+                        scoredGoals[i].scoredTeam.teamName + " scored at " + scoredGoals[i].scoredTime + " minutes.");
             }
 
             newGame.scoredGoals = scoredGoals;
@@ -170,15 +168,16 @@ public class League {
             System.out.println();
             System.out.println("Info from the Game object: ");
             System.out.println();
-            System.out.println("Home Team: " + newGame.homeTeam);
-            System.out.println("Away Team: " + newGame.awayTeam);
+            System.out.println("Home Team: " + newGame.homeTeam.teamName);
+            System.out.println("Away Team: " + newGame.awayTeam.teamName);
             System.out.println();
             for (int i = 0; i < newGame.scoredGoals.length; i++) {
                 System.out.println("Goal " + (i+1));
-                System.out.println("Player scored: " + newGame.scoredGoals[i].scoredPlayer);
-                System.out.println("Team scored: " + newGame.scoredGoals[i].scoredTeam);
+                System.out.println("Player scored: " + newGame.scoredGoals[i].scoredPlayer.playerName);
+                System.out.println("Team scored: " + newGame.scoredGoals[i].scoredTeam.teamName);
                 System.out.println("Time scored: " + newGame.scoredGoals[i].scoredTime);
                 System.out.println();
+
 
             }
 
