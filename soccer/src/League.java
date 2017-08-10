@@ -1,11 +1,11 @@
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
-
 
 public class League {
 
     public static void main(String[] args) {
-
 
         // the arrays of players' and teams' names;
 
@@ -70,7 +70,6 @@ public class League {
             // assigning players to teams;
             assignPlayersToTeams(teamSize, players, teams);
 
-
             // creating the Game;
             Game newGame = new Game();
 
@@ -82,31 +81,23 @@ public class League {
             // finding out the number of goals during the game;
             Random r = new Random();
             int numberOfGoals = r.nextInt(5);
-            System.out.println(numberOfGoals);
 
             // writing to the game object, who scored and at what time;
-
             if (numberOfGoals != 0) {
                 scoredGoals(teamSize, numberOfGoals, newGame);
             }
-
 
             // PRINTING ON SCREEN
 
             printRoster(teamSize, teams);
             printTheGame(newGame);
 
-
         } else {
             System.out.println(errorMessage);
         }
-
     }
 
-    /*************************************************************************/
-   /*                            METHODS                                    */
-
-    /*************************************************************************/
+     /********************************** METHODS ***************************************/
 
 
     // method to create Player Objects;
@@ -209,8 +200,18 @@ public class League {
                 goal.scoredTeam = newGame.awayTeam;
                 goal.scoredPlayer = newGame.awayTeam.rosterOfPlayers[playerScored - 6];
             }
+
             newGame.scoredGoals[i] = goal;
+
         }
+        // sort goals by time;
+        Arrays.sort(newGame.scoredGoals, new Comparator<Goal>() {
+            @Override
+            public int compare(Goal goal, Goal t1) {
+                return Double.compare(goal.scoredTime,t1.scoredTime);
+            }
+        });
+
     }
 
     // Printing out The Game Object Content;
